@@ -1,0 +1,61 @@
+﻿<!--
+//===============================================================================
+// Microsoft FastTrack for Azure
+// Query Azure AD Sign In Logs Samples
+//===============================================================================
+// Copyright © Microsoft Corporation.  All rights reserved.
+// THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY
+// OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT
+// LIMITED TO THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+// FITNESS FOR A PARTICULAR PURPOSE.
+//===============================================================================
+-->
+@{
+    ViewBag.Title = "Query Sign In Logs via Log Analytics";
+}
+
+<h2>Query Sign In Logs via Log Analytics</h2>
+
+@using (Html.BeginForm("QueryViaLogAnalytics", "Home"))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-group">
+        <label class="control-label" for="numberOfDays">Last X Days:</label>
+        <input type="number" name="numberOfDays" id="numberOfDays" class="form-control" value="1" min="1" />
+    </div>
+
+    <div class="form-group">
+        <label class="control-label" for="userPrincipalName">User Principal Name (optional):</label>
+        <input type="text" name="userPrincipalName" id="userPrincipalName" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <input type="submit" value="Submit" class="btn btn-primary" />
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Home", "Index")
+</div>
+
+@if (Model != null && Model.Count > 0)
+{
+        <table class="table table-striped">
+            <tr>
+                <th>Time</th>
+                <th>User</th>
+                <th>Principal Name</th>
+                <th>Result</th>
+            </tr>
+        @foreach (SignInLog log in Model)
+        {
+                    <tr>
+                        <td>@log.createdDateTime</td>
+                        <td>@log.userDisplayName</td>
+                        <td>@log.userPrincipalName</td>
+                        <td>@log.status.errorCode</td>
+                    </tr>
+        }
+        </table>
+}
